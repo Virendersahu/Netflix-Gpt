@@ -1,14 +1,42 @@
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import Header from "./Header";
 
+const signUpSchema = z.object({
+  name: z.string().min(2, "Name is too short"),
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
+
+const signInSchema = z.object({
+  email: z.string().email("Invalid email"),
+  password: z.string().min(6, "Password must be at least 6 characters"),
+});
 const Login = () => {
   // State to toggle between Sign In and Sign Up forms
   const [isSignedIn, setIsSignedIn] = useState(true);
   // Function to handle the toggle between Sign In and Sign Up
   // It will change the state of isSignedIn to true or false
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(isSignedIn ? signInSchema : signUpSchema),
+  });
+
   const handleSignUp = () => {
     setIsSignedIn(!isSignedIn);
   };
+
+  const onSubmit = (data) => {
+    console.log("Form submitted", data);
+  };
+
+  // UI Part for Login Form
   return (
     <div className="relative w-full h-screen bg-black overflow-auto">
       {/* Background Image */}
@@ -28,50 +56,50 @@ const Login = () => {
               {isSignedIn === true ? "Sign In" : "Sign Up"}
             </h1>
 
-            <form className="flex flex-col">
-              {/* It is visible only in sign Up form */}
+            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
               {!isSignedIn && (
-                <input
-                  className="mb-6 p-8 rounded bg-gray-700 placeholder-gray-400 text-white"
-                  type="text"
-                  placeholder="Enter your Name"
-                />
-              )}
-              <input
-                className="mb-6 p-8 rounded bg-gray-700 placeholder-gray-400 text-white"
-                type="text"
-                placeholder="Email or mobile number"
-              />
-              <input
-                className="mb-6 p-8 rounded bg-gray-700 placeholder-gray-400 text-white"
-                type="password"
-                placeholder="Password"
-              />
-              <button className="bg-red-600 hover:bg-red-700 transition text-white py-4 rounded font-semibold text-lg">
-                {isSignedIn ? "Sign In" : "Sign Up"}
-              </button>
-              {/* It is visible only in sign In form */}
-              {isSignedIn && (
                 <>
-                  <div className="text-center my-6 text-gray-500 text-lg">
-                    OR
-                  </div>
-                  <button className="bg-gray-700 hover:bg-gray-600 transition text-white py-2 rounded font-semibold text-lg mb-6">
-                    Use a sign-in code
-                  </button>
-                  <div className="flex justify-between items-center mt-6 text-lg text-gray-400">
-                    <label className="flex items-center">
-                      <input type="checkbox" className="mr-2" />
-                      Remember me
-                    </label>
-                    <a href="#" className="hover:underline">
-                      Forgot password?
-                    </a>
-                  </div>
+                  <input
+                    className="mb-2 p-4 rounded bg-gray-700 placeholder-gray-400 text-white"
+                    type="text"
+                    placeholder="Enter your Name"
+                    {...register("name")}
+                  />
+                  {errors.name && (
+                    <p className="text-red-500 text-sm mb-4">
+                      {errors.name.message}
+                    </p>
+                  )}
                 </>
               )}
-            </form>
+              <input
+                className="mb-2 p-4 rounded bg-gray-700 placeholder-gray-400 text-white"
+                type="text"
+                placeholder="Email or mobile number"
+                {...register("email")}
+              />
+              {errors.email && (
+                <p className="text-red-500 text-sm mb-4">
+                  {errors.email.message}
+                </p>
+              )}
 
+              <input
+                className="mb-2 p-4 rounded bg-gray-700 placeholder-gray-400 text-white"
+                type="password"
+                placeholder="Password"
+                {...register("password")}
+              />
+              {errors.password && (
+                <p className="text-red-500 text-sm mb-4">
+                  {errors.password.message}
+                </p>
+              )}
+
+              <button className="bg-red-600 hover:bg-red-700 transition text-white py-4 rounded font-semibold text-lg mt-4">
+                {isSignedIn ? "Sign In" : "Sign Up"}
+              </button>
+            </form>
             <p className="mt-8 text-lg text-gray-400">
               {isSignedIn ? "New to Netflix? " : "Already have an account? "}
               <span
