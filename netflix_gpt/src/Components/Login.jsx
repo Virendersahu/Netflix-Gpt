@@ -14,8 +14,9 @@ const signInSchema = z.object({
   email: z.string().email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
+
 const Login = () => {
-  // State to toggle between Sign In and Sign Up forms
+   // State to toggle between Sign In and Sign Up forms
   const [isSignedIn, setIsSignedIn] = useState(true);
   // Function to handle the toggle between Sign In and Sign Up
   // It will change the state of isSignedIn to true or false
@@ -38,69 +39,74 @@ const Login = () => {
 
   // UI Part for Login Form
   return (
-    <div className="relative w-full h-screen bg-black overflow-auto">
+    <div className="relative w-full min-h-screen bg-black">
       {/* Background Image */}
       <img
         src="https://assets.nflxext.com/ffe/siteui/vlv3/fa4630b1-ca1e-4788-94a9-eccef9f7af86/web/IN-en-20250407-TRIFECTA-perspective_43f6a235-9f3d-47ef-87e0-46185ab6a7e0_large.jpg"
         alt="background"
-        className="absolute top-0 left-0 w-full h-full object-cover z-0"
+        className="absolute top-0 left-0 w-full h-full object-cover"
       />
 
-      {/* Overlay Content */}
-      <div className="absolute top-0 left-0 w-full h-full z-10">
+      {/* Black overlay */}
+      <div className="absolute inset-0 bg-black/60" />
+
+      {/* Content */}
+      <div className="relative z-10 flex flex-col min-h-screen">
+        {/* Header */}
         <Header />
-        {/* You can add login form here */}
-        <div className="flex flex-col items-center justify-center h-full py-80">
-          <div className="w-3/12 h-5/6 min-w-[600px] bg-black bg-opacity-70 p-12 rounded text-white">
-            <h1 className="text-5xl font-bold mb-8">
-              {isSignedIn === true ? "Sign In" : "Sign Up"}
+
+        {/* Form section (centered vertically and horizontally) */}
+        <div className="flex flex-1 items-center justify-center">
+          <div className="w-full max-w-2xl  bg-black/75 text-white px-14 py-24 rounded-md shadow-lg flex flex-col justify-center min-h-[900px]">
+            <h1 className="text-5xl font-bold mb-10">
+              {isSignedIn ? "Sign In" : "Sign Up"}
             </h1>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
               {!isSignedIn && (
                 <>
                   <input
-                    className="mb-2 p-4 rounded bg-gray-700 placeholder-gray-400 text-white"
+                    className="w-full p-6 rounded bg-zinc-800 text-md placeholder-gray-400"
                     type="text"
                     placeholder="Enter your Name"
                     {...register("name")}
                   />
                   {errors.name && (
-                    <p className="text-red-500 text-sm mb-4">
+                    <p className="text-red-500 text-sm">
                       {errors.name.message}
                     </p>
                   )}
                 </>
               )}
+
               <input
-                className="mb-2 p-4 rounded bg-gray-700 placeholder-gray-400 text-white"
+                className="w-full p-6 rounded bg-zinc-800 text-md placeholder-gray-400"
                 type="text"
                 placeholder="Email or mobile number"
                 {...register("email")}
               />
               {errors.email && (
-                <p className="text-red-500 text-sm mb-4">
-                  {errors.email.message}
-                </p>
+                <p className="text-red-500 text-sm">{errors.email.message}</p>
               )}
 
               <input
-                className="mb-2 p-4 rounded bg-gray-700 placeholder-gray-400 text-white"
+                className="w-full p-6 rounded bg-zinc-800 text-md placeholder-gray-400"
                 type="password"
                 placeholder="Password"
                 {...register("password")}
               />
               {errors.password && (
-                <p className="text-red-500 text-sm mb-4">
+                <p className="text-red-500 text-sm">
                   {errors.password.message}
                 </p>
               )}
 
-              <button className="bg-red-600 hover:bg-red-700 transition text-white py-4 rounded font-semibold text-lg mt-4">
+              <button className="w-full bg-red-600 hover:bg-red-700 transition p-6 rounded font-semibold text-xl">
                 {isSignedIn ? "Sign In" : "Sign Up"}
               </button>
             </form>
-            <p className="mt-8 text-lg text-gray-400">
+
+            <p className="mt-6 text-md text-gray-400">
               {isSignedIn ? "New to Netflix? " : "Already have an account? "}
               <span
                 onClick={handleSignUp}
@@ -109,7 +115,8 @@ const Login = () => {
                 {isSignedIn ? "Sign up now" : "Sign in"}
               </span>
             </p>
-            <p className="mt-5 text-sm text-gray-500">
+
+            <p className="mt-6 text-md text-gray-500">
               This page is protected by Google reCAPTCHA to ensure you're not a
               bot.{" "}
               <a href="#" className="text-blue-500 hover:underline">
@@ -118,8 +125,9 @@ const Login = () => {
             </p>
           </div>
         </div>
-        {/* Footer Section */}
-        <div className="w-full bg-black bg-opacity-75 text-gray-400 px-16 py-10 text-lg mt-4 absolute bottom-0">
+
+        {/* Footer */}
+        <div className="w-full bg-black/75 text-gray-400 px-6 sm:px-16 py-10 text-sm">
           <div className="max-w-6xl mx-auto">
             <p className="mb-6">
               Questions? Call{" "}
